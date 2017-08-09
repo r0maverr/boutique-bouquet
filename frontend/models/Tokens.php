@@ -1,6 +1,6 @@
 <?php
 
-namespace restapi\models;
+namespace frontend\models;
 
 use Yii;
 

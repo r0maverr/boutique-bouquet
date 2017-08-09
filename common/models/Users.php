@@ -17,6 +17,7 @@ use Yii;
  * @property integer $status
  *
  * @property Tokens[] $tokens
+ * @property UsersCoupons[] $usersCoupons
  */
 class Users extends \yii\db\ActiveRecord
 {
@@ -67,5 +68,13 @@ class Users extends \yii\db\ActiveRecord
     public function getTokens()
     {
         return $this->hasMany(Tokens::className(), ['user_id' => 'id'])->inverseOf('user');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersCoupons()
+    {
+        return $this->hasMany(UsersCoupons::className(), ['user_id' => 'id'])->inverseOf('user');
     }
 }

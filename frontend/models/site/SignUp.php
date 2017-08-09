@@ -2,6 +2,7 @@
 
 namespace frontend\models\site;
 
+use common\components\Social;
 use common\models\extended\Users;
 
 use yii;
@@ -65,19 +66,28 @@ class SignUp extends Model
 
     public function signUp()
     {
-        $type = in_array($this->type, Users::TYPES);
-
-        $this->switch
-        $socialID = null;
-        $user = Users::signUp($type, $this->name, $this->phone, $this->email, $this->password, $socialID);
-        $this->sendEmail($user);
-
-        return $user;
+        switch (array_search($this->type, Users::TYPES)) {
+            case Users::TYPE_EMAIL:
+                $type = in_array($this->type, Users::TYPES);
+                $user = Users::signUp($type, $this->name, $this->phone, $this->email, $this->password, null);
+                $this->sendEmail($user);
+                return $user;
+                break;
+            case Users::TYPE_VK:
+                $response = new \stdClass();
+                $response->url = Social::generateAuthorizeUrlVK();
+                return $response;
+                break;
+            case Users::TYPE_FB:
+            case Users::TYPE_INST:
+            default:
+                break;
+        }
     }
 
     private function sendEmail($user)
     {
-        Yii::$app->mail->compose('confirmEmail',
+        Yii::$app->mailer->compose('confirmEmail',
             [
                 'user' => $user,
                 'link' => Yii::$app->params['settings']['frontUrl'] . '/site/confirm-email/' . $user->email_verify_token

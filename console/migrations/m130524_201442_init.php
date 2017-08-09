@@ -65,14 +65,41 @@ class m130524_201442_init extends Migration
             'device' => $this->text()->null(),
             'timestamp' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
         ]);
+
+        /*
+         * COUPONS
+         * */
+
+        $this->createTable('coupons', [
+            'id' => $this->primaryKey(),
+            'name' => $this->string()->unique()->notNull(),
+            'value' => $this->integer()->notNull(),
+            'type' => $this->smallInteger(1)->notNull(),
+            'end_time' => $this->integer()->notNull()
+        ]);
+
+        /*
+         * USERS COUPONS
+         * */
+
+        $this->createTable('users_coupons', [
+            'user_id' => $this->integer(),
+            'coupon_id' => $this->integer(),
+        ]);
+
+        $this->addForeignKey('FK_users_coupons', 'users_coupons', 'user_id', 'users', 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('FK_coupons_users', 'users_coupons', 'coupon_id', 'coupons', 'id', 'CASCADE', 'CASCADE');
     }
 
     public function down()
     {
+        $this->dropForeignKey('FK_users_coupons', 'users_coupons');
+        $this->dropForeignKey('FK_coupons_users', 'users_coupons');
+        $this->dropTable('users_coupons');
+        $this->dropTable('coupons');
+        $this->dropTable('requests_logs');
+        $this->dropTable('settings');
         $this->dropTable('tokens');
         $this->dropTable('users');
-
-        $this->dropTable('settings');
-        $this->dropTable('requests_logs');
     }
 }

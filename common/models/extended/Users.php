@@ -10,11 +10,14 @@ use yii;
  * @property string $password_reset_token
  * @property string $fcm_token
  *
+ * @property Coupons $coupons
+ *
  */
 class Users extends \common\models\Users
 {
     const STATUS_EMAIL_UNVERIFIED = 0;
     const STATUS_PASSWORD_RESETED = 1;
+    const STATUS_SOCIAL_UNACTIVE = 2;
     const STATUS_ACTIVE = 10;
 
     const TYPE_EMAIL = 0;
@@ -27,6 +30,13 @@ class Users extends \common\models\Users
         self::TYPE_FB => 'FB',
         self::TYPE_INST => 'INST'
     ];
+
+    public function getCoupons(){
+        return Coupons::find()
+            ->leftJoin('users_coupons', 'users_coupons.user_id = users.id')
+            ->where(['users.id' => $this->id])
+            ->all();
+    }
 
     public static function findByEmail($email)
     {
@@ -190,5 +200,15 @@ class Users extends \common\models\Users
         }
 
         return $this;
+    }
+
+    public function addCoupon(Coupons $coupon)
+    {
+        $userCoupon = new UsersCoupons();
+        $userCoupon->user_id = $this->id;
+        $userCoupon->coupon_id = $coupon->id;
+        if (!$userCoupon->save()) {
+            throw new yii\web\ServerErrorHttpException('Can\'t save userCoupon in db!');
+        }
     }
 }

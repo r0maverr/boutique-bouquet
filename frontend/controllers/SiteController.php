@@ -4,14 +4,13 @@ namespace frontend\controllers;
 
 use frontend\models\site\ConfirmEmail;
 use frontend\models\site\SignUp;
+use frontend\models\site\AuthorizeVK;
+use frontend\models\site\AcсessTokenVK;
 use yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
-/**
- * Site controller
- */
 class SiteController extends Controller
 {
 
@@ -72,24 +71,18 @@ class SiteController extends Controller
     public function actionSignUp()
     {
         $model = new SignUp();
+
         $model->load(Yii::$app->request->post(), '');
         if (!$model->validate()) {
-
-            echo '<pre>';
-            print_r($model->errors);
-            echo '</pre>';
-            die();
-
             return $model;
         }
-        $model->signUp();
 
-        echo '<pre>';
-        print_r($model);
-        echo '</pre>';
-        die();
+//        echo '<pre>';
+//        print_r($model->signUp());
+//        echo '</pre>';
+//        die();
 
-        return $this->render('index');
+        return $model->signUp();
     }
 
     public function actionConfirmEmail()
@@ -97,24 +90,37 @@ class SiteController extends Controller
         $model = new ConfirmEmail();
         $model->load(Yii::$app->request->post(), '');
         if (!$model->validate()) {
-
-            echo '<pre>';
-            print_r($model->errors);
-            echo '</pre>';
-            die();
-
             return $model;
         }
-        $model->confirmEmail()
+        return $model->confirmEmail();
+    }
 
-        ;
+    public function actionAuthorizeVK()
+    {
+        $model = new AuthorizeVK();
+        $model->load(Yii::$app->request->post(), '');
+        if (!$model->validate()) {
+            return $model;
+        }
 
-        echo '<pre>';
-        print_r($model);
-        echo '</pre>';
-        die();
+        $model->authorize();
 
-        return $this->render('index');
+        return new \stdClass();
+    }
+
+    public function actionAccessTokenVK()
+    {
+        $model = new AcсessTokenVK();
+        $model->load(Yii::$app->request->post(), '');
+        if (!$model->validate()) {
+            return $model;
+        }
+        return $model->getResponse();
+    }
+
+    public function actionLogin()
+    {
+        $model = new Login();
     }
 
     public function actionLogout()
