@@ -17,13 +17,17 @@ use yii\web\ServerErrorHttpException;
  */
 class Tokens extends \common\models\Tokens
 {
+    const USER_TYPE_CLIENT = 'CLIENT';
+    const USER_TYPE_MERCHANT = 'MERCHANT';
+    const USER_TYPE_ADMIN = 'ADMIN';
+
     const TYPE_EMAIL_VERIFY_TOKEN = 0;
     const TYPE_AUTH_KEY = 1;
     const TYPE_BEARER_TOKEN = 2;
     const TYPE_PASSWORD_RESET_TOKEN = 3;
     const TYPE_FCM_TOKEN = 4;
 
-    public static function updateOrCreateOrDelete($user_id, $type, $value)
+    public static function updateOrCreateOrDelete($user_id, $user_type, $type, $value)
     {
         $token = self::findOne(['user_id' => $user_id, 'type' => $type]);
 
@@ -33,6 +37,7 @@ class Tokens extends \common\models\Tokens
             }
             $token = new self();
             $token->user_id = $user_id;
+            $token->user_type = $user_type;
             $token->type = $type;
             $token->value = $value;
         } else {

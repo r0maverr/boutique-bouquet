@@ -9,10 +9,11 @@ use Yii;
  *
  * @property integer $id
  * @property integer $user_id
+ * @property integer $user_type
  * @property integer $type
  * @property string $value
  *
- * @property Users $user
+ * @property Clients $user
  */
 class Tokens extends \yii\db\ActiveRecord
 {
@@ -31,9 +32,9 @@ class Tokens extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'value'], 'required'],
-            [['user_id', 'type'], 'integer'],
+            [['user_id', 'user_type', 'type'], 'integer'],
             [['value'], 'string', 'max' => 63],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -45,6 +46,7 @@ class Tokens extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
+            'user_type' => 'User Type',
             'type' => 'Type',
             'value' => 'Value',
         ];
@@ -55,6 +57,6 @@ class Tokens extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id'])->inverseOf('tokens');
+        return $this->hasOne(Clients::className(), ['id' => 'user_id'])->inverseOf('tokens');
     }
 }

@@ -4,7 +4,7 @@ namespace common\models\extended;
 
 use Yii;
 
-class UsersCoupons extends \common\models\UsersCoupons
+class Products extends \common\models\Products
 {
 
 }

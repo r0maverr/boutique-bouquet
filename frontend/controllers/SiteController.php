@@ -77,11 +77,6 @@ class SiteController extends Controller
             return $model;
         }
 
-//        echo '<pre>';
-//        print_r($model->signUp());
-//        echo '</pre>';
-//        die();
-
         return $model->signUp();
     }
 

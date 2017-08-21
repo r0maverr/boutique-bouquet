@@ -13,7 +13,7 @@ use Yii;
  * @property integer $type
  * @property integer $end_time
  *
- * @property UsersCoupons[] $usersCoupons
+ * @property Actions[] $actions
  */
 class Coupons extends \yii\db\ActiveRecord
 {
@@ -55,8 +55,8 @@ class Coupons extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersCoupons()
+    public function getActions()
     {
-        return $this->hasMany(UsersCoupons::className(), ['coupon_id' => 'id'])->inverseOf('coupon');
+        return $this->hasMany(Actions::className(), ['coupon_id' => 'id'])->inverseOf('coupon');
     }
 }
